@@ -1,6 +1,8 @@
 import 'dart:async';
 
-import 'package:flame/components.dart';
+import 'package:boboo_tutorial/actors/character_component.dart';
+import 'package:boboo_tutorial/world/background_component.dart';
+import 'package:boboo_tutorial/world/game_joystick.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
@@ -12,32 +14,23 @@ main() {
   runApp(GameWidget(game: BobooGame()));
 }
 
-class BobooGame extends FlameGame {
-  SpriteComponent boboo = SpriteComponent();
-  SpriteComponent kitchen = SpriteComponent();
+class BobooGame extends FlameGame with HasDraggables {
+  late final GameJoystick joystick;
+  CharacterComponent boboo = CharacterComponent();
+  BackgroundComponent kitchen = BackgroundComponent();
 
   @override
   FutureOr<void> onLoad() async {
-    add(
-      kitchen
-        ..sprite = await loadSprite('world/kitchen.png')
-        ..size = size,
-    );
-    add(
-      boboo
-        ..sprite = await loadSprite('actors/boboo_solo.png')
-        ..size = Vector2.all(138)
-        ..position = Vector2(0, 200)
-        ..anchor = Anchor.center,
-    );
+    add(kitchen);
+    add(boboo);
+    joystick = GameJoystick();
+    add(joystick);
     return super.onLoad();
   }
 
   @override
   void update(double dt) {
-    if (boboo.x < size.x) {
-      boboo.x += 60 * dt;
-    }
+    // debugPrint(joystick.direction.toString());
 
     super.update(dt);
   }
